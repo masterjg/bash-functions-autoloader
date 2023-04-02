@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-FUNCTIONS_DIR=$(dirname $_)
-for file in $(find $FUNCTIONS_DIR -iname '*.sh' ! -iname '__loader.sh'); do
-	FUNCTION_DIR=$(dirname ${file##"$FUNCTIONS_DIR/"})
-	if [[ $FUNCTION_DIR != "." ]]; then
-		FUNCTION_NAMESPACE="${FUNCTION_DIR//\//.}."
+functions_dir=$(dirname $_)
+for file in $(find $functions_dir -iname '*.sh' ! -iname '__loader.sh'); do
+	function_dir=$(dirname ${file##"$functions_dir/"})
+	if [[ $function_dir != "." ]]; then
+		function_namespace="${function_dir//\//.}."
 	else
-		FUNCTION_NAMESPACE=""
+		function_namespace=""
 	fi
-	eval "$(cat $file | sed -E "s/^([a-z0-9_]+\s?\(\)\s?\{)$/$FUNCTION_NAMESPACE\1/")"
+	function_name=${$(basename $file)%.sh*}
+	function_body=$(cat $file | sed -E "s/^#!.+$//")
+	eval $(echo "$function_namespace$function_name() {\n$function_body\n}")
 done
