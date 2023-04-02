@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-functions_dir=$(dirname $_)
+functions_dir=$(dirname $BASH_SOURCE)
 for file in $(find $functions_dir -iname '*.sh' ! -iname '__loader.sh'); do
 	function_dir=$(dirname ${file##"$functions_dir/"})
 	if [[ $function_dir != "." ]]; then
@@ -8,7 +8,8 @@ for file in $(find $functions_dir -iname '*.sh' ! -iname '__loader.sh'); do
 	else
 		function_namespace=""
 	fi
-	function_name=${$(basename $file)%.sh*}
+	file_name=$(basename $file)
+	function_name=${file_name%.sh*}
 	function_body=$(cat $file | sed -E "s/^#!.+$//")
-	eval $(echo "$function_namespace$function_name() {\n$function_body\n}")
+	eval "$(echo -e "$function_namespace$function_name() {\n$function_body\n}")"
 done
