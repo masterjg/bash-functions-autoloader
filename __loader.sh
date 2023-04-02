@@ -10,6 +10,6 @@ for file in $(find $functions_dir -iname '*.sh' ! -iname '__loader.sh'); do
 	fi
 	file_name=$(basename $file)
 	function_name=${file_name%.sh*}
-	function_body=$(cat $file | sed -E "s/^#!.+$//")
+	function_body="$(cat $file)"
 	eval "$(echo -e "$function_namespace$function_name() {\n$function_body\n}")"
 done
