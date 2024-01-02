@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S bash -eu -o pipefail
 
 functions_dir="$(dirname "${BASH_SOURCE}")"
 for file in $(find "${functions_dir}" -iname '*.sh' ! -iname '__loader.sh'); do
